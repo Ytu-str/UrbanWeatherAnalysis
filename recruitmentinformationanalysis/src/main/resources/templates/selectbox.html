@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>选择城市02</title>
+		<script src="js/jquery-3.3.1.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="layui/css/layui.css">
+	</head>
+	<body>
+	<script src="layui/layui.js" type="text/javascript"></script>
+		<div class="layui-form-item layui-form">
+			<label class="layui-form-label">选择城市</label>
+			<div class="layui-input-block">
+					<select name="interest" lay-verify="" lay-filter="a" id="select">
+						<option value="北京" selected="北京">北京</option>
+						<option value="上海">上海</option>
+						<option value="广州">广州</option>
+						<option value="深圳">深圳</option>
+						<option value="杭州">杭州</option>
+						<option value="东莞">东莞</option>
+						<option value="天津">天津</option>
+						<option value="重庆">重庆</option>
+						<option value="南京">南京</option>
+						<option value="苏州">苏州</option>
+						<option value="宁波">宁波</option>
+						<option value="成都">成都</option>
+						<option value="青岛">青岛</option>
+						<option value="郑州">郑州</option>
+						<option value="武汉">武汉</option>
+						<option value="长沙">长沙</option>
+						<option value="西安">西安</option>
+						<option value="沈阳">沈阳</option>
+						<option value="昆明">昆明</option>
+						<option value="珠海">珠海</option>
+						<option value="佛山">佛山</option>
+						<option value="无锡">无锡</option>
+						<option value="常州">常州</option>
+						<option value="福州">福州</option>
+						<option value="济南">济南</option>
+						<option value="南昌">南昌</option>
+						<option value="合肥">合肥</option>
+						<option value="哈尔滨">哈尔滨</option>
+						<option value="大连">大连</option>
+						<option value="长春">长春</option>
+					</select>
+				</div>
+			</div>
+	<div id="main1" style="height: 550px"></div>
+	<script src="../js/jquery-3.3.1.js" charset="utf-8" type="text/javascript"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=xfhhaTThl11qYVrqLZii6w8qE5ggnhrY&__ec_v__=20190126"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
+		<script type="text/javascript">
+			layui.use(['element', 'form', 'jquery'], function() {
+				var $ = layui.jquery;
+				var element = layui.element;
+				var form = layui.form;
+			    form.on('select(a)',function(data) {
+					var workplace=data.value
+					$.ajax({
+						type: "post",
+						async: true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+						url: "http://localhost:8080/findAloneStage",    //请求发送到TestServlet处
+						data: {"workplace":workplace},
+						dataType: "json",        //返回数据形式为json
+						success: function (data) {
+							var three = data.three
+							var numthree = 0
+							for (var i = 0; i < three.length; i++) {
+								numthree++
+							}
+							var threetofive = data.threetofive
+							var numthreetofive = 0
+							for (var i = 0; i < threetofive.length; i++) {
+								numthreetofive++
+							}
+							var fivetoseven = data.fivetoseven
+							var numfivetoseven = 0
+							for (var i = 0; i < fivetoseven.length; i++) {
+								numfivetoseven++
+							}
+							var seventonine = data.seventonine
+							var numseventonine = 0
+							for (var i = 0; i < seventonine.length; i++) {
+								numseventonine++
+							}
+							var ninetowelve = data.ninetowelve
+							var numninetowelve = 0
+							for (var i = 0; i < ninetowelve.length; i++) {
+								numninetowelve++
+							}
+							var twelvetofifteen = data.twelvetofifteen
+							var numtwelvetofifteen = 0
+							for (var i = 0; i < twelvetofifteen.length; i++) {
+								numtwelvetofifteen++
+							}
+							var fifteentotwenty = data.fifteentotwenty
+							var numfifteentotwenty= 0
+							for (var i = 0; i < fifteentotwenty.length; i++) {
+								numfifteentotwenty++
+							}
+							var twenty = data.twenty
+							var numtwenty = 0
+							for (var i = 0; i < twenty.length; i++) {
+								numtwenty++
+							}
+							var myChart = echarts.init(document.getElementById('main1'));
+							option = {
+								title: {
+									text: '薪资数量分布'
+								},
+								tooltip: {
+									trigger: 'axis',
+									axisPointer: {
+										type: 'shadow'
+									}
+								},
+								legend: {
+									data: [ '薪资数量']
+								},
+								grid: {
+									left: '3%',
+									right: '4%',
+									bottom: '3%',
+									containLabel: true
+								},
+								xAxis: {
+									type: 'value',
+									boundaryGap: [0, 0.01]
+								},
+								yAxis: {
+									type: 'category',
+									data: ['-3k', '3k-5k', '5k-7k', '7k-9k', '9k-12k', '12k-15k','15k-20k','20k+']
+								},
+								series: [
+									{
+										name: '薪资数量',
+										type: 'bar',
+										data: [numthree, numthreetofive, numfivetoseven, numseventonine, numninetowelve, numtwelvetofifteen,numfifteentotwenty,numtwenty]
+									}
+								]
+							};
+
+							myChart.setOption(option);
+						},
+						error: function (errorMsg) {
+							//请求失败时执行该函数
+							alert("图表请求数据失败!");
+							myChart.hideLoading();
+						}
+
+					});
+			})
+			});
+			$.ajax({
+				type: "post",
+				async: true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+				url: "http://localhost:8080/findAloneStage",    //请求发送到TestServlet处
+				data: {"workplace":"北京"},
+				dataType: "json",        //返回数据形式为json
+				success: function (data) {
+					var three = data.three
+					var numthree = 0
+					for (var i = 0; i < three.length; i++) {
+						numthree++
+					}
+					var threetofive = data.threetofive
+					var numthreetofive = 0
+					for (var i = 0; i < threetofive.length; i++) {
+						numthreetofive++
+					}
+					var fivetoseven = data.fivetoseven
+					var numfivetoseven = 0
+					for (var i = 0; i < fivetoseven.length; i++) {
+						numfivetoseven++
+					}
+					var seventonine = data.seventonine
+					var numseventonine = 0
+					for (var i = 0; i < seventonine.length; i++) {
+						numseventonine++
+					}
+					var ninetowelve = data.ninetowelve
+					var numninetowelve = 0
+					for (var i = 0; i < ninetowelve.length; i++) {
+						numninetowelve++
+					}
+					var twelvetofifteen = data.twelvetofifteen
+					var numtwelvetofifteen = 0
+					for (var i = 0; i < twelvetofifteen.length; i++) {
+						numtwelvetofifteen++
+					}
+					var fifteentotwenty = data.fifteentotwenty
+					var numfifteentotwenty= 0
+					for (var i = 0; i < fifteentotwenty.length; i++) {
+						numfifteentotwenty++
+					}
+					var twenty = data.twenty
+					var numtwenty = 0
+					for (var i = 0; i < twenty.length; i++) {
+						numtwenty++
+					}
+					var myChart = echarts.init(document.getElementById('main1'));
+					option = {
+						title: {
+							text: '薪资数量分布'
+						},
+						tooltip: {
+							trigger: 'axis',
+							axisPointer: {
+								type: 'shadow'
+							}
+						},
+						legend: {
+							data: [ '薪资数量']
+						},
+						grid: {
+							left: '3%',
+							right: '4%',
+							bottom: '3%',
+							containLabel: true
+						},
+						xAxis: {
+							type: 'value',
+							boundaryGap: [0, 0.01]
+						},
+						yAxis: {
+							type: 'category',
+							data: ['-3k', '3k-5k', '5k-7k', '7k-9k', '9k-12k', '12k-15k','15k-20k','20k+']
+						},
+						series: [
+							{
+								name: '薪资数量',
+								type: 'bar',
+								data: [numthree, numthreetofive, numfivetoseven, numseventonine, numninetowelve, numtwelvetofifteen,numfifteentotwenty,numtwenty]
+							}
+						]
+					};
+
+					myChart.setOption(option);
+				},
+				error: function (errorMsg) {
+					//请求失败时执行该函数
+					alert("图表请求数据失败!");
+					myChart.hideLoading();
+				}
+
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>薪资-柱状图</title>
+		<script src="../js/echarts.min.js" type="text/javascript"></script>
+		<script src="../js/jquery-3.3.1.js" charset="utf-8" type="text/javascript"></script>
+	</head>
+
+	<body style="height:100%; margin: 0;background-color:#d9d9d9">
+		<div id='one' style="height: 100%;width: 100%;">
+			<script src="../layui/layui.js" type="text/javascript"></script>
+			<script type="text/javascript">
+				var myChart = echarts.init(document.getElementById('one'));
+				var avg=[]
+				var nummax=[]
+				var nummin=[]
+				// 异步加载数据
+				$.ajax({
+					type : "post",
+					async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+					url : "http://localhost:8080/findAllSalary",    //请求发送到TestServlet处
+					data : {},
+					dataType : "json",        //返回数据形式为json
+					success : function(data) {
+						var frist = data.frist;
+						var newfrist = data.newfrist;
+						var second = data.second;
+						for(var key in second) { //第一层循环取到各个list
+							var List = second[key];
+							for (var salarylist in List) { //第二层循环取list中的对象
+								avg.push(List[salarylist].avg)
+								nummax.push(List[salarylist].max)
+								nummin.push(List[salarylist].min)
+							}
+						}
+						for(var key in newfrist) { //第一层循环取到各个list
+							var List = newfrist[key];
+							for (var salarylist in List) { //第二层循环取list中的对象
+								avg.push(List[salarylist].avg)
+								nummax.push(List[salarylist].max)
+								nummin.push(List[salarylist].min)
+							}
+						}
+
+						for(var key in frist) { //第一层循环取到各个list
+							var List = frist[key];
+							for (var salarylist in List) { //第二层循环取list中的对象
+								avg.push(List[salarylist].avg)
+								nummax.push(List[salarylist].max)
+								nummin.push(List[salarylist].min)
+							}
+						}
+
+
+						option = {
+							title: {
+								text: '薪资对比-柱状图',
+								textStyle: {
+									color: '#000000'
+								},
+							},
+							tooltip: {
+								trigger: 'axis',
+								axisPointer: {
+									type: 'shadow'
+								}
+							},
+							legend: {
+								data: ['平均薪资', '最高平均薪资', '最低平均薪资']
+							},
+							grid: {
+								left: '3%',
+								right: '4%',
+								bottom: '3%',
+								containLabel: true
+							},
+							xAxis: {
+								type: 'value',
+								boundaryGap: [0, 0.01],
+								axisLine: {
+									lineStyle: {
+										color: '#58afed', // X轴及其文字颜色
+									}
+								}
+							},
+							yAxis: {
+								type: 'category',
+								data: ['二线城市', '新一线城市', '一线城市'],
+								axisLine: {
+									lineStyle: {
+										color: '#58afed', // y轴及其文字颜色
+									}
+								}
+							},
+							series: [{
+								name: '平均薪资',
+								type: 'bar',
+								data: avg,
+								color: ['#f9cb9c'],
+							},
+								{
+									name: '最高平均薪资',
+									type: 'bar',
+									data: nummax,
+									color: ['#d5a6bd'],
+								},
+								{
+									name: '最低平均薪资',
+									type: 'bar',
+									data: nummin,
+									color: ['#ffd966'],
+								}
+							]
+						};
+						// 使用刚指定的配置项和数据显示图表。
+						//
+						// 显示标题，图例和空的坐标轴
+						myChart.setOption(option);
+					},
+					error : function(errorMsg) {
+						//请求失败时执行该函数
+						alert("图表请求数据失败!");
+						myChart.hideLoading();
+					}
+				})
+				// 使用刚指定的配置项和数据显示图表。
+
+			</script>
+		</div>
+</html>

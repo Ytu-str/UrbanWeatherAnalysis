@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+
+
+   <div id="container" style="height: 100%"></div>
+       <script src="../js/jquery-3.3.1.js" charset="utf-8" type="text/javascript"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=xfhhaTThl11qYVrqLZii6w8qE5ggnhrY&__ec_v__=20190126"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
+
+   <script type="text/javascript">
+        $.ajax({
+            type : "post",
+            async : true,
+            url : "http://localhost:8080/findAllWorkplace",
+            data : {},
+            dataType : "json",        //返回数据形式为json
+            success : function(data) {
+                var bj= data.beijing;
+                var sh=data.shanghai;
+                var cc=data.changchun;
+                var cs=data.changsha;
+                var cz=data.changzhou;
+                var cd=data.chengdu;
+                var cq=data.chongqing;
+                var qd=data.qingdao;
+                var dl=data.dalian;
+                var dg=data.dongguan;
+                var fs=data.foshan;
+                var fz=data.fuzhou;
+                var gg=data.guangzhou;
+                var heb=data.haerbin;
+                var hz=data.hangzhou;
+                var hf=data.hefei;
+                var jn=data.jinan;
+                var km=data.kunming;
+                var nc=data.nanchang;
+                var nj=data.nanjing;
+                var nb=data.ningbo;
+                var sy=data.shenyang;
+                var sz=data.shenzhen;
+                var szh=data.suzhou;
+                var tj=data.tianjin;
+                var wh=data.wuhan;
+                var wx=data.wuxi;
+                var xa=data.xian;
+                var zz=data.zhengzhou;
+                var zh=data.zhuhai;
+
+                    var dom = document.getElementById("container");
+                    var myChart = echarts.init(dom);
+                    var app = {};
+                    option = null;
+                    var geoCoordMap = {
+                        "北京": [116.397128, 39.916527],
+                        "上海": [121.48941, 31.40527],
+                        "长春": [125.28845, 43.83327],
+                        "长沙": [112.98626, 28.25591],
+                        "常州": [119.59794, 31.72322],
+                        "成都": [104.10194, 30.65984],
+                        "重庆": [106.54041, 29.40268],
+                        "青岛": [120.33, 36.07],
+                        "大连": [121.5255, 38.95223],
+                        "东莞": [113.75179, 23.02067],
+                        "佛山": [112.89262, 22.90026],
+                        "福州": [119.27345, 26.04769],
+                        "广州": [113.27324, 23.15792],
+                        "哈尔滨": [126.95717, 45.54774],
+                        "杭州": [120.21201, 30.2084],
+                        "合肥": [117.30794, 31.79322],
+                        "济南": [116.75199, 36.55358],
+                        "昆明": [102.82147, 24.88554],
+                        "南昌": [115.94422, 28.54538],
+                        "南京": [118.8921, 31.32751],
+                        "宁波": [121.84431, 29.89889],
+                        "沈阳": [123.46987, 41.80515],
+                        "深圳": [113.88308, 22.55329],
+                        "苏州": [120.63132, 31.30227],
+                        "天津": [117.30983, 39.71755],
+                        "武汉": [114.02919, 30.58203],
+                        "无锡": [120.28429, 31.52853],
+                        "西安": [108.93425, 34.23053],
+                        "郑州": [113.6401, 34.72468],
+                        "珠海": [113.29673, 22.20907],
+
+                    };
+                    var convertData = function (data) {
+                        var res = [];
+                        for (var i = 0; i < data.length; i++) {
+                            var geoCoord = geoCoordMap[data[i].name];
+                            if (geoCoord) {
+                                res.push({
+                                    name: data[i].name,
+                                    value: geoCoord.concat(data[i].value)
+                                });
+                            }
+                        }
+                        return res;
+                    };
+
+                    option = {
+                        backgroundColor: '#404a59',
+                        title: {
+                            text: '全国城市招聘数量',
+                            subtext: 'Number of urban recruitment in China',
+                          //  sublink: 'http://www.pm25.in',
+                            x: 'center',
+                            textStyle: {
+                                color: '#fff'
+                            }
+                        },
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: function (params) {
+                                return params.name + ' : ' + params.value[2];
+                            }
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            y: 'bottom',
+                            x: 'right',
+                            data: ['recruit'],
+                            textStyle: {
+                                color: '#fff'
+                            }
+                        },
+                        visualMap: {
+                            min: 10000,
+                            max: 100000,
+                            calculable: true,
+                            color: ['#d94e5d', '#eac736', '#50a3ba'],
+                            textStyle: {
+                                color: '#fff'
+                            }
+                        },
+                        geo: {
+                            map: 'china',
+                            label: {
+                                emphasis: {
+                                    show: false
+                                }
+                            },
+                            itemStyle: {
+                                normal: {
+                                    areaColor: '#323c48',
+                                    borderColor: '#111'
+                                },
+                                emphasis: {
+                                    areaColor: '#2a333d'
+                                }
+                            }
+                        },
+                        series: [{
+                            name: 'recruit',
+                            type: 'scatter',
+                            coordinateSystem: 'geo',
+                            data: convertData([{
+                                name: "北京",
+                                value: bj
+                            },
+                                {
+                                    name: "上海",
+                                    value: sh
+                                },
+                                {
+                                    name: "长春",
+                                    value: cc
+                                },
+                                {
+                                    name: "长沙",
+                                    value: cs
+                                },
+                                {
+                                    name: "常州",
+                                    value: cz
+                                },
+                                {
+                                    name: "成都",
+                                    value: cd
+                                },
+                                {
+                                    name: "重庆",
+                                    value: cq
+                                },
+                                {
+                                    name: "青岛",
+                                    value: qd
+                                },
+                                {
+                                    name: "大连",
+                                    value: dl
+                                },
+                                {
+                                    name: "东莞",
+                                    value: dg
+                                },
+                                {
+                                    name: "佛山",
+                                    value: fs
+                                },
+                                {
+                                    name: "福州",
+                                    value: fz
+                                },
+                                {
+                                    name: "广州",
+                                    value: gg
+                                },
+                                {
+                                    name: "哈尔滨",
+                                    value: heb
+                                },
+                                {
+                                    name: "杭州",
+                                    value: hz
+                                },
+                                {
+                                    name: "合肥",
+                                    value: hf
+                                },
+                                {
+                                    name: "济南",
+                                    value: jn
+                                },
+                                {
+                                    name: "昆明",
+                                    value: km
+                                },
+                                {
+                                    name: "南昌",
+                                    value: nc
+                                },
+                                {
+                                    name: "南京",
+                                    value: nj
+                                },
+                                {
+                                    name: "宁波",
+                                    value: nb
+                                },
+                                {
+                                    name: "沈阳",
+                                    value: sy
+                                },
+                                {
+                                    name: "深圳",
+                                    value: sz
+                                },
+                                {
+                                    name: "苏州",
+                                    value: szh
+                                },
+                                {
+                                    name: "天津",
+                                    value: tj
+                                },
+                                {
+                                    name: "武汉",
+                                    value: wh
+                                },
+                                {
+                                    name: "无锡",
+                                    value: wx
+                                },
+                                {
+                                    name: "西安",
+                                    value: xa
+                                },
+                                {
+                                    name: "郑州",
+                                    value: zz
+                                },
+                                {
+                                    name: "珠海",
+                                    value: zh
+                                }
+                            ]),
+                            symbolSize: 12,
+                            label: {
+                                normal: {
+                                    show: false
+                                },
+                                emphasis: {
+                                    show: false
+                                }
+                            },
+                            itemStyle: {
+                                emphasis: {
+                                    borderColor: '#fff',
+                                    borderWidth: 1
+                                }
+                            }
+                        }]
+                    }
+
+                    if (option && typeof option === "object") {
+                        myChart.setOption(option, true);
+
+                    }
+    },
+    error : function(errorMsg) {
+        //请求失败时执行该函数
+        alert("图表请求数据失败!");
+        myChart.hideLoading();
+    }
+})
+// 使用刚指定的配置项和数据显示图表。
+
+       </script>
+   </body>
+</html>
